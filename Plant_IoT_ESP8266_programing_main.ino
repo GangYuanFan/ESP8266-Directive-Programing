@@ -1,13 +1,13 @@
 #include <ESP8266WiFi.h>
 #define DO_INVERSE 1
-#define WIFI_TIMEOUT 1500
+#define WIFI_TIMEOUT 2000
 
 WiFiServer server(80);
-const int httpPort = "<your server port>";
+const int httpPort = 80;
 ////////////////////////////////////////////////////////////////////////////////
-const char* ssid     = "<your SSID>";
-const char* password = "<your wifi password>";
-const char* host = "<your server host IP>";
+const char* ssid     = "YOUR SSID";
+const char* password = "YOUR PASSWORD";
+const char* host = "YOUR IP";
 uint8_t Plant_Light_Status = 0x00;
 ///////////////////////////////////////////////////////////////////////////////
 unsigned long t1,t2;
@@ -54,11 +54,14 @@ void loop() {
     client.flush();
     t1=t2;
     Plant_Light_Status = uint8_t(arr[req.length() - 6]) - 48;
-    #if DO_INVERSE
-      digitalWrite(2, ~Plant_Light_Status & 0x01);
-    #else
-      digitalWrite(2, Plant_Light_Status);
-    #endif
+    if(Plant_Light_Status == 0x01 || Plant_Light_Status == 0x00)
+    {
+      #if DO_INVERSE
+        digitalWrite(2, ~Plant_Light_Status & 0x01);
+      #else
+        digitalWrite(2, Plant_Light_Status);
+      #endif
+    }
   }
   else
   {
